@@ -117,7 +117,7 @@ function printInfo(arrRasteniyas) {
     '<th class="text_name strong">Порядок</th>'+
     '<th class="text_name strong">Семейство</th>'+
     '<th class="text_name strong">Род</th>'+
-    '<th class="text_name strong"></th>'+
+    '<th class="text_name strong">В Беларуси</th>'+
     '<th class="text_name strong"></th>'+
     '</table>';
 
@@ -133,6 +133,7 @@ function printInfo(arrRasteniyas) {
       '<td class="text_name " id="details'+i+'">'+arrRasteniyas[i].plantOrder+'</td>'+
       '<td class="text_name " id="details'+i+'">'+arrRasteniyas[i].plantFamily+'</td>'+
       '<td class="text_name " id="details'+i+'">'+arrRasteniyas[i].plantKind+'</td>'+
+      '<td class="text_name " id="details'+i+'">'+arrRasteniyas[i].plantBelarus+'</td>'+
       '<td class="text_name format " id="edit'+i+'">Редактировать</td>'+
       '<td class="text_name format " id="remove'+i+'">Удалить</td>'+
       '</table>';
@@ -208,7 +209,7 @@ class BaseClass {
     this.plantOrder = plantOrder;
     this.plantFamily = plantFamily;
     this.plantKind = plantKind;
-    this.plantBelarus = plantBelarus;
+    this.checkBtn();
   }
 
   get plantName(){
@@ -235,9 +236,9 @@ class BaseClass {
   get plantKind(){
     return this._plantKind;
   }
-  get plantBelarus() {
-    return this._plantBelarus;
-  }
+  // get plantBelarus() {
+  //   return this._plantBelarus;
+  // }
 
   set plantName(value){
     if(value.length == " "){
@@ -293,8 +294,19 @@ class BaseClass {
     }
     this._plantKind = value;
   }
-  set plantBelarus(value){
-    this._plantBelarus = value;
+  // set plantBelarus(value){
+  //   if (plantBelarus.checked) {
+  //       this._plantBelarus = value;
+  //   }
+  // }
+  checkBtn() {
+      var radioBtn = document.getElementById('plantBelarus');
+      for (var i=0;i<radioBtn.length; i++) {
+          if (radioBtn[i].checked) {
+              return(radioBtn[i].value);
+          }
+      }
+
   }
 
 }
@@ -309,28 +321,27 @@ class OneExtendsClass extends BaseClass{
     this.type = "fern";
   }
 
-  // get countryPlant(){
-  //   return this._countryPlant;
-  // }
-  //
-  // set countryPlant(value){
-  //   if(value.length == " "){
-  //     alert("Введите страну происхождения растения");
-  //   }
-  //   this._countryPlant = value;
-  // }
-  //
-  // get applicationPlant() {
-  //   return this._applicationPlant;
-  // }
-  //
-  // set applicationPlant(value) {
-  //   if (value.length == " ") {
-  //     alert("Введите область применения растения")
-  //   }
-  //   return this._applicationPlant;
-  // }
+  get countryPlant(){
+    return this._countryPlant;
+  }
 
+  set countryPlant(value){
+    if(value.length == " "){
+      alert("Введите страну происхождения растения");
+    }
+    this._countryPlant = value;
+  }
+
+  get applicationPlant() {
+    return this._applicationPlant;
+  }
+
+  set applicationPlant(value) {
+    if (value.length == " ") {
+      alert("Введите область применения растения")
+    }
+    return this._applicationPlant;
+  }
   //**methods */
 }
 
@@ -342,27 +353,27 @@ class TwoExtendsClass extends BaseClass{
     this.type = "spruce";
   }
 
-  // get discovererPlant() {
-  //   return this._discovererPlant;
-  // }
-  //
-  // set discovererPlant(value) {
-  //   if (value.length == " ") {
-  //     alert("Введите первооткрыватель растения");
-  //   }
-  //   return this._discovererPlant;
-  // }
-  //
-  // get habitatPlant() {
-  //   return this._habitatPlant;
-  // }
-  //
-  // set habitatPlant(value) {
-  //   if (value.length == " ") {
-  //     alert("Введите ареал произрастания");
-  //   }
-  //   return this._habitatPlant;
-  // }
+  get discovererPlant() {
+    return this._discovererPlant;
+  }
+
+  set discovererPlant(value) {
+    if (value.length == " ") {
+      alert("Введите первооткрыватель растения");
+    }
+    return this._discovererPlant;
+  }
+
+  get habitatPlant() {
+    return this._habitatPlant;
+  }
+
+  set habitatPlant(value) {
+    if (value.length == " ") {
+      alert("Введите ареал произрастания");
+    }
+    return this._habitatPlant;
+  }
 
   //**methods */
 }
@@ -377,6 +388,7 @@ function checkRadio() {
             return(radio[i].value);
         }
     }
+
 }
 
 let arrRasteniyas = []; // массив из персон
@@ -394,6 +406,15 @@ arrRasteniyas.push(Rasteniya2);
 display("information");
 printInfo(arrRasteniyas);
 
+//Подтягивание контента при клике на input
+document.getElementById("radio_ext1").addEventListener('click', () => {
+  document.getElementById("oneClass").style.display = 'block';
+  document.getElementById("twoClass").style.display = 'none';
+});
+document.getElementById("radio_ext2").addEventListener('click', () => {
+  document.getElementById("oneClass").style.display = 'none';
+  document.getElementById("twoClass").style.display = 'block';
+});
 
 
 
@@ -429,10 +450,10 @@ document.getElementById("mainMenu").style.display="";
       display("information");
       alert("Добавил нового");
     break;
-    case "spruc":
+    case "spruce":
       arrRasteniyas[arrRasteniyas.length] = new TwoExtendsClass(plantName, plantsDescription, domainPlant, plantDepartment, plantClass, plantOrder, plantFamily, plantKind, plantBelarus, discovererPlant, habitatPlant);
-      localStorage.printInfo(arrRasteniyas);
-      localStorage.display("information");
+      printInfo(arrRasteniyas);
+      display("information");
       alert("Добавил нового");
       break;
     default :
@@ -447,3 +468,4 @@ document.getElementById("mainMenu").style.display="";
 document.getElementById("mainMenu").addEventListener("click",function() {
   display("information");
 });
+
